@@ -82,6 +82,7 @@ def run_dc_bot():
         else:
             await interaction.response.send_message("You don't exist in the database, you cannot be deleted!")  # noqa
 
+    # yet to bve updated - removed stock functionality
     @client.tree.command(name="profile")
     async def profile(interaction: discord.Interaction):
         user = interaction.user.name
