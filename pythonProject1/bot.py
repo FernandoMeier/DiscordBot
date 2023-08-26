@@ -5,6 +5,7 @@ from discord import app_commands
 import ffacts
 from dotenv import load_dotenv
 from pymongo import MongoClient
+import datetime
 
 
 def run_dc_bot():
@@ -85,11 +86,17 @@ def run_dc_bot():
     # yet to bve updated - removed stock functionality
     @client.tree.command(name="profile")
     async def profile(interaction: discord.Interaction):
-        user = interaction.user.name
+        user = interaction.user.display_name
+        pfp = interaction.user.display_avatar
         info = collection.find_one({"name": user})
-        await interaction.response.send_message(  # noqa
-            f"Username: {info.get('name')} \nMoney: {info.get('inv').get('money')} "
-            f"\nTades made:  {info.get('inv').get('total_handel')}")
+        embed = discord.Embed(title="Profile", description="Look at your profile and its stats", color=discord.Color.random())
+        embed.set_author(name=f"{user}", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ", icon_url="https://cdn-icons-png.flaticon.com/512/5258/5258076.png")
+        embed.set_thumbnail(url=f"{pfp}")
+        embed.add_field(name="This you?", value=f"{info.get('name')}")
+        embed.add_field(name="Moneys", value=f"{info.get('inv').get('money')}")
+        embed.set_footer(text=f"Embed created {datetime.datetime.now().strftime('%A, %d %b %Y')}")
+
+        await interaction.response.send_message(embed=embed) # noqa
 
     @client.event
     async def on_message(message):
